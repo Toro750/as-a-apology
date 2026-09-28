@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport setup for mobile-first, supporting safe areas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>A Little Place For You</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Preloading the exact requested images so they load instantly without lag -->
+    <link rel="preload" href="images/1000075614_f55b54.jpg" as="image">
+    <link rel="preload" href="images/1000075618_f55b54.jpg" as="image">
+    <link rel="preload" href="images/1000075616_f55b54.jpg" as="image">
+    <link rel="preload" href="images/1000075615_f55b54.jpg" as="image">
+</head>
+<body>
+
+    <!-- Lightweight Ambient Background -->
+    <div class="ambient-glow"></div>
+
+    <!-- SCENE 1: THE LITTLE DOOR -->
+    <section class="scene active" id="scene-1">
+        <div class="scene-content">
+            <div class="little-door-icon">
+                <div class="door-shape"></div>
+            </div>
+            <div class="text-sequence" id="seq-1">
+                <p class="line">I made a little place for you.</p>
+                <p class="line">Not because everything has to be perfect.</p>
+                <p class="line">Just because sometimes I have more feelings than words.</p>
+                <p class="line">Come in.</p>
+            </div>
+            <button class="action-btn hidden" id="btn-1" onclick="nextScene(2)">ENTER MY LITTLE WORLD &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 2: SOMETHING I OWE YOU -->
+    <section class="scene" id="scene-2">
+        <div class="scene-content">
+            <div class="text-sequence" id="seq-2">
+                <p class="line">Before anything else,<br>there’s something I want to say properly.</p>
+                <p class="line">Today I was feeling really sick and frustrated,<br>and honestly, I wanted you with me badly.</p>
+                <p class="line">When you had to leave for class,<br>I let that hurt turn into anger.</p>
+                <p class="line">I said things that made it seem like<br>you weren’t there for me,<br>even though you were trying to be.</p>
+                <p class="line">That wasn’t fair to you.</p>
+                <p class="line">I’m sorry.</p>
+                <p class="line">I don’t want my difficult moments<br>to become something you have to carry.</p>
+                <p class="line">I’m learning to tell you when I need you<br>without making you feel guilty for having your own life.</p>
+                <p class="line emphasis">I’m still learning.<br>But I mean it when I say I want to do better.</p>
+            </div>
+            <button class="action-btn hidden nav-btn" id="btn-2" onclick="nextScene(3)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 3: YOU WERE STILL THERE (Photo 1) -->
+    <section class="scene" id="scene-3">
+        <div class="scene-content">
+            
+            <div class="envelope-wrapper" id="envelope-trigger" onclick="openEnvelope()">
+                <p class="tap-hint">(Tap to open)</p>
+                <div class="envelope">
+                    <div class="flap"></div>
+                    <div class="photo-inside">
+                        <!-- PHOTO 1 -->
+                        <img src="images/1000075614_f55b54.jpg" alt="Memory" class="real-photo">
+                    </div>
+                    <div class="envelope-front-cover"></div>
+                </div>
+            </div>
+            
+            <div class="text-sequence" id="seq-3">
+                <p class="line">Because even when you couldn’t stay,<br>you were still trying to be there.</p>
+                <p class="line">You reminded me that I wasn’t alone.</p>
+                <p class="line">And I noticed.<br>I really did.</p>
+            </div>
+            <button class="action-btn hidden nav-btn" id="btn-3" onclick="nextScene(4)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 4: THE THINGS I LOVE ABOUT YOU -->
+    <section class="scene" id="scene-4">
+        <div class="scene-content">
+            <h2 class="scene-title line" style="opacity:1; transform:none;">Find the things I love</h2>
+            <p class="tap-hint" style="margin-bottom: 20px;">(Tap the flowers)</p>
+            
+            <div class="garden-env">
+                <div class="flower-btn" data-msg="your smile" style="top:10%; left:10%;"></div>
+                <div class="flower-btn" data-msg="your voice" style="top:30%; left:80%;"></div>
+                <div class="flower-btn" data-msg="your eyes" style="top:50%; left:20%;"></div>
+                <div class="flower-btn" data-msg="your little expressions" style="top:70%; left:70%;"></div>
+                <div class="flower-btn" data-msg="the way you care" style="top:85%; left:30%;"></div>
+                <div class="flower-btn" data-msg="ordinary moments feel special" style="top:40%; left:50%;"></div>
+                <div class="flower-btn" data-msg="your laugh" style="top:15%; left:60%;"></div>
+                <div class="flower-btn" data-msg="your existence" style="top:60%; left:85%;"></div>
+                
+                <div id="flower-message" class="floating-message"></div>
+            </div>
+            
+            <div class="text-sequence" id="seq-4">
+                <p class="line">I didn’t fall for one thing about you.</p>
+                <p class="line">I fell for the whole person.</p>
+                <p class="line">All the little things.<br>Even the things you probably don’t realise I notice.</p>
+            </div>
+            <button class="action-btn hidden nav-btn" id="btn-4" onclick="nextScene(5)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 5: HER LITTLE WORLD (Photos 2 & 3) -->
+    <section class="scene" id="scene-5">
+        <div class="scene-content">
+            <h2 class="scene-title line" style="opacity:1; transform:none; margin-bottom: 5px;">Her Little World</h2>
+            <p class="tap-hint" style="margin-bottom: 30px;">(Tap the glowing spots)</p>
+            
+            <div class="room-env">
+                <!-- Hotspot 1: Picture Frame -->
+                <button class="hotspot" id="hs-frame" style="top: 35%; left: 25%;" aria-label="Open Picture Frame" onclick="openMemory('frame')"></button>
+                <!-- Hotspot 2: Scrapbook -->
+                <button class="hotspot" id="hs-book" style="top: 65%; left: 70%;" aria-label="Open Scrapbook" onclick="openMemory('book')"></button>
+            </div>
+
+            <div class="text-sequence" id="seq-5">
+                <p class="line">Every piece of you belongs here.</p>
+            </div>
+
+            <button class="action-btn hidden nav-btn" id="btn-5" onclick="nextScene(6)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- Memory Modals (Outside scene-content to allow full viewport usage on mobile) -->
+    <div class="memory-modal" id="modal-frame">
+        <div class="modal-box frame-style">
+            <button class="close-modal" onclick="closeMemory('frame')">✕</button>
+            <!-- PHOTO 2 -->
+            <img src="images/1000075618_f55b54.jpg" alt="Beautiful Memory" class="responsive-modal-photo">
+            <p class="modal-caption">You have no idea how pretty you are.</p>
+        </div>
+    </div>
+
+    <div class="memory-modal" id="modal-book">
+        <div class="modal-box book-style">
+            <button class="close-modal" onclick="closeMemory('book')">✕</button>
+            <!-- PHOTO 3 -->
+            <img src="images/1000075616_f55b54.jpg" alt="Scrapbook Memory" class="responsive-modal-photo">
+            <p class="modal-caption">Every moment with you goes right into the scrapbook of my heart.</p>
+        </div>
+    </div>
+
+    <!-- SCENE 6: WHAT I'M LEARNING -->
+    <section class="scene" id="scene-6">
+        <div class="scene-content">
+            <div class="text-sequence" id="seq-6">
+                <p class="line">I’m learning something too.</p>
+                <p class="line">Loving someone doesn’t mean<br>expecting them to fix every bad day.</p>
+                <p class="line">Sometimes I need to breathe,<br>calm myself down,<br>and carry myself for a little while.</p>
+                <p class="line">And when I really need you,<br>I’ll tell you.</p>
+                <p class="line">I don’t want to make you guess.</p>
+                <p class="line emphasis">I want to love you better,<br>not just love you harder.</p>
+            </div>
+            <button class="action-btn hidden nav-btn" id="btn-6" onclick="nextScene(7)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 7: GO SHINE, MY GIRL -->
+    <section class="scene" id="scene-7">
+        <div class="scene-content">
+            <div class="cute-icon-group">✨ 🐻 💕 🐻 ✨</div>
+            <div class="text-sequence" id="seq-7">
+                <p class="line script-text" style="font-size: 1.6rem;">Okay.<br>Enough about my emotional ass.</p>
+                <p class="line">You have a presentation to handle.</p>
+                <p class="line">Breathe.</p>
+                <p class="line">Speak slowly.</p>
+                <p class="line">You know more than you think.</p>
+                <p class="line">Don’t rush yourself.</p>
+                <p class="line">You do not need to be perfect.</p>
+                <p class="line">You just need to be you.</p>
+                <p class="line">I’m proud of you already.</p>
+                <p class="line emphasis">Now go show them your beautiful brain.</p>
+            </div>
+            <button class="action-btn hidden nav-btn" id="btn-7" onclick="nextScene(8)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 8: GO SAFELY -->
+    <section class="scene" id="scene-8">
+        <div class="scene-content">
+            <div class="text-sequence" id="seq-8">
+                <p class="line">Before you go…</p>
+                <p class="line">Take everything you need.</p>
+                <p class="line">Eat something when you can.</p>
+                <p class="line">Keep your things safe.</p>
+                <p class="line">Take care on the way.</p>
+                <p class="line">Don’t rush.</p>
+                <p class="line">Text me when you reach.</p>
+                <p class="line emphasis script-text" style="font-size: 1.8rem;">Hubby’s tiny instructions. 💕</p>
+            </div>
+            <button class="action-btn hidden nav-btn" id="btn-8" onclick="nextScene(9)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 9: WHEN YOU COME BACK -->
+    <section class="scene" id="scene-9">
+        <div class="scene-content">
+            <div class="tiny-house-icon">🏡</div>
+            <div class="text-sequence" id="seq-9">
+                <p class="line">Whatever today turns into…</p>
+                <p class="line">You can always come back here.</p>
+                <p class="line">Tell me everything.</p>
+                <p class="line">The good parts.</p>
+                <p class="line">The awkward parts.</p>
+                <p class="line">The things that made you laugh.</p>
+                <p class="line">The things that annoyed you.</p>
+                <p class="line">The things you’re proud of.</p>
+                <p class="line">And the things you wish went differently.</p>
+                <p class="line emphasis">I’ll listen.</p>
+            </div>
+            <button class="action-btn hidden nav-btn" id="btn-9" onclick="nextScene(10)">CONTINUE &rarr;</button>
+        </div>
+    </section>
+
+    <!-- SCENE 10: FINAL LETTER (Photo 4) -->
+    <section class="scene" id="scene-10">
+        <div class="scene-content">
+            
+            <div class="final-frame hidden" id="final-photo-container">
+                <!-- PHOTO 4 -->
+                <img src="images/1000075615_f55b54.jpg" alt="Final Memory" class="responsive-final-photo">
+            </div>
+            
+            <div class="text-sequence final-letter" id="seq-10">
+                <p class="line">I don’t want to love you perfectly.</p>
+                <p class="line">I want to love you honestly.</p>
+                <p class="line">I want to understand you.</p>
+                <p class="line">I want to respect you.</p>
+                <p class="line">I want to keep learning you.</p>
+                <p class="line">And when I get something wrong…</p>
+                <p class="line">I want to learn from it,<br>instead of making you carry it.</p>
+                <p class="line">You mean so much to me.</p>
+                <p class="line">Now go shine, my girl.</p>
+                <p class="line">I’ll be here.</p>
+                <p class="line signature">— Your hubby</p>
+                <p class="line final-title">A little place for you.<br>Always.</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

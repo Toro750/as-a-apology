@@ -1,0 +1,442 @@
+/* =========================================================================
+   VARIABLES & GLOBAL SETUP (System fonts, No Google Fonts dependencies)
+   ========================================================================= */
+:root {
+    --blush-pink: #f9ebea;
+    --dusty-rose: #d6a9a9;
+    --soft-cream: #fcf8f5;
+    --warm-white: #fffdfc;
+    --mocha-brown: #9d7b6b;
+    --dark-mocha: #4a3b32;
+    
+    /* Cross-platform system fonts */
+    --font-serif: Georgia, "Times New Roman", Times, serif;
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    --font-script: "Apple Chancery", "Snell Roundhand", cursive, Georgia, serif;
+    
+    --transition-fast: 0.6s ease;
+    --transition-smooth: 0.8s ease-out;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--soft-cream);
+    color: var(--dark-mocha);
+    font-family: var(--font-sans);
+    /* Mobile optimal viewport */
+    width: 100vw;
+    height: 100svh;
+    overflow: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Very subtle background glow to replace heavy particle calculations */
+.ambient-glow {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150vw; height: 150vh;
+    background: radial-gradient(circle, rgba(249,235,234,0.4) 0%, rgba(252,248,245,0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* =========================================================================
+   TYPOGRAPHY & TEXT ANIMATION
+   ========================================================================= */
+h1, h2, h3, .line {
+    font-family: var(--font-serif);
+}
+
+.script-text {
+    font-family: var(--font-script);
+    font-style: italic;
+}
+
+.text-sequence {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.line {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+    text-align: center;
+    color: var(--dark-mocha);
+    max-width: 90%;
+}
+
+/* Applied via JS for lightweight GPU rendering */
+.line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.emphasis {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--dusty-rose);
+}
+
+.tap-hint {
+    font-size: 0.85rem;
+    color: #a88888;
+    margin-bottom: 15px;
+}
+
+/* =========================================================================
+   SCENE MANAGEMENT
+   ========================================================================= */
+.scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Safe Area Insets for iPhones */
+    padding: env(safe-area-inset-top) 20px max(20px, env(safe-area-inset-bottom)) 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+}
+
+.scene.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+.scene-content {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0 60px 0;
+    min-height: 100%;
+    justify-content: center;
+}
+
+/* =========================================================================
+   PREMIUM BUTTON DESIGN
+   ========================================================================= */
+.action-btn {
+    background-color: var(--warm-white);
+    border: 1px solid var(--dusty-rose);
+    color: var(--dusty-rose);
+    padding: 14px 28px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(214, 169, 169, 0.15);
+    /* Minimum touch target 44px */
+    min-height: 48px; 
+    min-width: 160px;
+    
+    /* Reveal transitions */
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease, background-color 0.2s ease, scale 0.1s ease;
+    pointer-events: none;
+    
+    /* Ensure it doesn't get hidden at bottom */
+    margin-top: 30px;
+    flex-shrink: 0;
+}
+
+.action-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.action-btn:active {
+    transform: scale(0.96);
+}
+
+/* =========================================================================
+   SCENE 3: ENVELOPE (Lightweight)
+   ========================================================================= */
+.envelope-wrapper {
+    position: relative;
+    width: 220px;
+    height: 160px;
+    margin: 20px 0 40px 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.envelope {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--dusty-rose);
+    border-radius: 4px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+.flap {
+    position: absolute;
+    top: 0; left: 0;
+    border-left: 110px solid transparent;
+    border-right: 110px solid transparent;
+    border-top: 85px solid #c49696;
+    transform-origin: top;
+    transition: transform 0.6s ease;
+    z-index: 3;
+}
+.envelope-front-cover {
+    position: absolute;
+    bottom: 0; left: 0;
+    border-left: 110px solid transparent;
+    border-right: 110px solid transparent;
+    border-bottom: 85px solid #e0b4b4;
+    z-index: 2;
+}
+.photo-inside {
+    position: absolute;
+    top: 5px; left: 10px;
+    width: 200px;
+    height: 145px;
+    background: var(--warm-white);
+    padding: 4px 4px 15px 4px; /* Polaroid feel */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.real-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.envelope-wrapper.open .flap {
+    transform: rotateX(180deg);
+}
+.envelope-wrapper.open .photo-inside {
+    transform: translateY(-90px) rotate(-2deg);
+    z-index: 4;
+}
+
+/* =========================================================================
+   SCENE 4: GARDEN (Interactive)
+   ========================================================================= */
+.garden-env {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    margin-bottom: 20px;
+}
+.flower-btn {
+    position: absolute;
+    width: 36px; height: 36px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid var(--dusty-rose);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+}
+.flower-btn::after {
+    content: '✿';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--dusty-rose);
+    font-size: 1.2rem;
+}
+.flower-btn.clicked {
+    background: var(--dusty-rose);
+}
+.flower-btn.clicked::after {
+    color: var(--warm-white);
+}
+.floating-message {
+    position: absolute;
+    bottom: -10px; width: 100%;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--dusty-rose);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+/* =========================================================================
+   SCENE 5: MEMORY ROOM
+   ========================================================================= */
+.room-env {
+    width: 100%;
+    max-width: 320px;
+    height: 200px;
+    background: var(--warm-white);
+    border: 1px solid #e5d5d5;
+    border-radius: 8px;
+    position: relative;
+    margin-bottom: 20px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.03);
+}
+.hotspot {
+    position: absolute;
+    width: 44px; height: 44px; /* Accessible tap target */
+    background: rgba(214, 169, 169, 0.2);
+    border: 2px solid var(--dusty-rose);
+    border-radius: 50%;
+    cursor: pointer;
+    transform: translate(-50%, -50%); /* Centered nicely */
+    animation: gentle-pulse 2s infinite;
+}
+
+@keyframes gentle-pulse {
+    0% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(214, 169, 169, 0.4); }
+    70% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 8px rgba(214, 169, 169, 0); }
+    100% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(214, 169, 169, 0); }
+}
+
+/* Modals */
+.memory-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(252, 248, 245, 0.96);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 100;
+    padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
+}
+.memory-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-box {
+    background: var(--warm-white);
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    max-width: 95vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* Crucial: Prevents awful cropping */
+.responsive-modal-photo {
+    width: 100%;
+    max-width: 400px;
+    max-height: 65svh; /* Keeps image strictly within screen height boundaries */
+    object-fit: contain; /* Never cuts off face/body */
+    display: block;
+    border-radius: 4px;
+}
+.modal-caption {
+    font-family: var(--font-serif);
+    font-style: italic;
+    margin-top: 15px;
+    font-size: 1.2rem;
+    text-align: center;
+    color: var(--dark-mocha);
+}
+.close-modal {
+    position: absolute;
+    top: -15px; right: -15px;
+    width: 36px; height: 36px;
+    background: var(--dusty-rose);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* =========================================================================
+   SCENE 10: FINAL SCENE
+   ========================================================================= */
+#scene-10 {
+    background: linear-gradient(135deg, #1c2331, #0f1522);
+    color: var(--warm-white);
+}
+#scene-10 .line {
+    color: var(--warm-white);
+}
+#scene-10 .emphasis {
+    color: #e2d1c3;
+}
+.final-frame {
+    background: var(--warm-white);
+    padding: 12px;
+    border-radius: 2px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    margin: 20px 0 30px 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.5s ease, transform 1.5s ease;
+    width: 100%;
+    max-width: 350px;
+}
+.final-frame.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Crucial: Final photo preservation */
+.responsive-final-photo {
+    width: 100%;
+    max-height: 55svh;
+    object-fit: contain;
+    display: block;
+}
+
+/* Tiny Decor Elements */
+.little-door-icon {
+    width: 60px; height: 80px;
+    background: var(--mocha-brown);
+    border-radius: 30px 30px 0 0;
+    margin-bottom: 25px;
+}
+.tiny-house-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+.cute-icon-group {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    letter-spacing: 5px;
+}
+
+/* =========================================================================
+   RESPONSIVE POLISH (Strictly mobile first)
+   ========================================================================= */
+@media (min-width: 600px) {
+    .line { font-size: 1.4rem; }
+    .emphasis { font-size: 1.6rem; }
+    .envelope-wrapper { width: 260px; height: 180px; }
+    .photo-inside { width: 230px; height: 165px; }
+    .flap { border-left: 130px solid transparent; border-right: 130px solid transparent; border-top: 100px solid #c49696; }
+    .envelope-front-cover { border-left: 130px solid transparent; border-right: 130px solid transparent; border-bottom: 100px solid #e0b4b4; }
+}
